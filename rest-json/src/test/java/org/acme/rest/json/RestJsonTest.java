@@ -17,11 +17,11 @@
 package org.acme.rest.json;
 
 import io.quarkus.test.junit.QuarkusTest;
+
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 
 /**
  * JVM mode tests.
@@ -30,41 +30,35 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 public class RestJsonTest {
 
     @Test
-    public void fruits() {
+    public void hello() {
 
-        /* Assert the initial fruits are there */
+        /* Assert the initial fruit is there */
         given()
                 .when().get("/fruits")
                 .then()
                 .statusCode(200)
                 .body(
-                        "$.size()", is(2),
-                        "name", containsInAnyOrder("Apple", "Pineapple"),
-                        "description", containsInAnyOrder("Winter fruit", "Tropical fruit"));
+                        "$.size()", Matchers.is(1),
+                        "name", Matchers.contains("Apple"));
 
         /* Add a new fruit */
         given()
-                .body("{\"name\": \"Pear\", \"description\": \"Winter fruit\"}")
+                .body("{\"name\": \"Pear\"}")
                 .header("Content-Type", "application/json")
                 .when()
                 .post("/fruits")
                 .then()
-                .statusCode(200)
-                .body(
-                        "$.size()", is(3),
-                        "name", containsInAnyOrder("Apple", "Pineapple", "Pear"),
-                        "description", containsInAnyOrder("Winter fruit", "Tropical fruit", "Winter fruit"));
-    }
+                .statusCode(200);
 
-    @Test
-    public void legumes() {
+        /* Assert that pear was added */
         given()
-                .when().get("/legumes")
+                .when().get("/fruits")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(2),
-                        "name", containsInAnyOrder("Carrot", "Zucchini"),
-                        "description", containsInAnyOrder("Root vegetable, usually orange", "Summer squash"));
+                .body(
+                        "$.size()", Matchers.is(2),
+                        "name", Matchers.contains("Apple", "Pear"));
+
     }
 
 }
