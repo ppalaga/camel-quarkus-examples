@@ -40,6 +40,7 @@ public class MyPojoRouteBuilder extends RouteBuilder {
     @Named
     CxfEndpoint contact() {
         CxfEndpoint contactEndpoint = new CxfEndpoint();
+        contactEndpoint.setWsdlURL("wsdl/ContactService.wsdl");
         contactEndpoint.setServiceClass(ContactService.class);
         contactEndpoint.setAddress("/contact");
 

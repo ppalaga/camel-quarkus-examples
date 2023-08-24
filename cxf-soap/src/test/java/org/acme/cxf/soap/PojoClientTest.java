@@ -70,16 +70,16 @@ public class PojoClientTest extends BaseTest {
 
         requestContext.put(SecurityConstants.STORE_BYTES_IN_ATTACHMENT, false);
 
-        List<Interceptor<? extends Message>> inInterceptors = ClientProxy.getClient(port).getInInterceptors();
-        List<Interceptor<? extends Message>> outInterceptors = ClientProxy.getClient(port).getOutInterceptors();
+        // List<Interceptor<? extends Message>> inInterceptors = ClientProxy.getClient(port).getInInterceptors();
+        // List<Interceptor<? extends Message>> outInterceptors = ClientProxy.getClient(port).getOutInterceptors();
 
-        LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
-        loggingInInterceptor.setPrettyLogging(true);
-        inInterceptors.add(loggingInInterceptor);
+        // LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
+        // loggingInInterceptor.setPrettyLogging(true);
+        // inInterceptors.add(loggingInInterceptor);
 
-        LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
-        loggingOutInterceptor.setPrettyLogging(true);
-        outInterceptors.add(loggingOutInterceptor);
+        // LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
+        // loggingOutInterceptor.setPrettyLogging(true);
+        // outInterceptors.add(loggingOutInterceptor);
 
         return port;
     }
@@ -106,5 +106,6 @@ public class PojoClientTest extends BaseTest {
         Assertions.assertNotNull(cxfClient.getContact("Croway"), "We haven't found contact.");
 
         Assertions.assertThrows(NoSuchContactException.class, () -> cxfClient.getContact("Non existent"));
+
     }
 }
