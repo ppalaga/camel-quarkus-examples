@@ -16,18 +16,23 @@
  */
 package org.acme.cxf.soap;
 
+import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import com.example.customerservice.Customer;
 import com.example.customerservice.CustomerService;
+import com.example.customerservice.CustomerServiceService;
 import com.example.customerservice.NoSuchCustomerException;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.Service;
 import jakarta.xml.ws.soap.SOAPFaultException;
-import org.apache.cxf.ext.logging.LoggingFeature;
-import org.apache.cxf.frontend.ClientProxyFactoryBean;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.acme.cxf.soap.security.SamlStandaloneCallbackHandler;
+import org.apache.cxf.ws.security.SecurityConstants;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,13 +47,33 @@ public class WsdlClientTest extends BaseTest {
     CustomerService cxfClient;
 
     protected CustomerService createCustomerClient() {
-        String URL = getServerUrl() + "/cxf/services/customer";
 
-        ClientProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setServiceClass(CustomerService.class);
-        factory.setAddress(URL);
-        factory.getFeatures().add(new LoggingFeature());
-        return (CustomerService) factory.create();
+        final URL serviceUrl = Thread.currentThread().getContextClassLoader().getResource("wsdl/CustomerService.wsdl");
+        final Service service = Service.create(serviceUrl, CustomerServiceService.SERVICE);
+
+        // CustomerService port = (CustomerService) factory.create();
+        CustomerService port = service.getPort(CustomerService.class);
+
+        BindingProvider bp = (BindingProvider) port;
+        Map<String, Object> requestContext = bp.getRequestContext();
+
+        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, getServerUrl() + "/cxf/services/customer");
+
+        Properties samlProps = new Properties();
+        samlProps.put("org.apache.wss4j.crypto.provider", "org.apache.wss4j.common.crypto.Merlin");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.type", "pkcs12");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.file", "saml.p12");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.password", "Secret!");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.alias", "saml-key");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.private.password", "Secret!");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.private.caching", "true");
+
+        requestContext.put(SecurityConstants.SIGNATURE_PROPERTIES, samlProps);
+        requestContext.put(SecurityConstants.SAML_CALLBACK_HANDLER, new SamlStandaloneCallbackHandler("TestUser"));
+
+        requestContext.put(SecurityConstants.STORE_BYTES_IN_ATTACHMENT, false);
+
+        return port;
     }
 
     @BeforeEach

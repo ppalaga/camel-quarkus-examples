@@ -16,13 +16,18 @@
  */
 package org.acme.cxf.soap.pojo;
 
+import java.util.HashMap;
+import java.util.Properties;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Named;
+import org.acme.cxf.soap.interceptor.security.SubjectCreatingSAMLPolicyInterceptor;
 import org.acme.cxf.soap.pojo.service.ContactService;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
+import org.apache.cxf.ws.security.SecurityConstants;
 
 /**
  * This class demonstrate how to expose a SOAP endpoint starting from java classes
@@ -38,12 +43,34 @@ public class MyPojoRouteBuilder extends RouteBuilder {
         contactEndpoint.setServiceClass(ContactService.class);
         contactEndpoint.setAddress("/contact");
 
+        contactEndpoint.setProperties(new HashMap<>());
+
+        // for "SAML Sender Vouches" Authentication
+        Properties samlProps = new Properties();
+        samlProps.put("org.apache.wss4j.crypto.provider", "org.apache.wss4j.common.crypto.Merlin");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.type", "pkcs12");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.file", "saml.p12");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.password", "Secret!");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.alias", "saml-key");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.private.password", "Secret!");
+        samlProps.put("org.apache.wss4j.crypto.merlin.keystore.private.caching", "true");
+
+        contactEndpoint.getProperties().put(SecurityConstants.SIGNATURE_PROPERTIES, samlProps);
+
+        // contactEndpoint.getProperties().put(org.apache.cxf.ws.security.SecurityConstants.STORE_BYTES_IN_ATTACHMENT, "true");
+
+        contactEndpoint.getInInterceptors().add(new SubjectCreatingSAMLPolicyInterceptor());
+
+        contactEndpoint.getFeatures().add(new org.apache.cxf.ext.logging.LoggingFeature());
+
         return contactEndpoint;
     }
 
     @Override
     public void configure() throws Exception {
         from("cxf:bean:contact")
-                .recipientList(simple("bean:inMemoryContactService?method=${header.operationName}"));
+                .recipientList(simple("bean:inMemoryContactService?method=${header.operationName}"))
+                .removeHeaders("*");
+        ;
     }
 }

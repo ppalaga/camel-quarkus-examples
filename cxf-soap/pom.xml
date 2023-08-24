@@ -29,13 +29,13 @@
     <description>Camel Quarkus Example :: CXF SOAP</description>
 
     <properties>
-        <quarkus.platform.version>3.2.2.Final</quarkus.platform.version>
-        <camel-quarkus.platform.version>3.0.0-SNAPSHOT</camel-quarkus.platform.version>
+        <quarkus.platform.version>3.2.4.Final</quarkus.platform.version>
+        <camel-quarkus.platform.version>3.2.4.Final</camel-quarkus.platform.version>
 
-        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-        <camel-quarkus.platform.group-id>org.apache.camel.quarkus</camel-quarkus.platform.group-id>
-        <camel-quarkus.platform.artifact-id>camel-quarkus-bom</camel-quarkus.platform.artifact-id>
+        <camel-quarkus.platform.group-id>io.quarkus.platform</camel-quarkus.platform.group-id>
+        <camel-quarkus.platform.artifact-id>quarkus-camel-bom</camel-quarkus.platform.artifact-id>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -92,9 +92,35 @@
             <artifactId>camel-quarkus-cxf-soap</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkiverse.cxf</groupId>
+            <artifactId>quarkus-cxf-xjc-plugins</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>io.quarkiverse.cxf</groupId>
+			<artifactId>quarkus-cxf-rt-ws-security</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>io.quarkiverse.cxf</groupId>
+            <artifactId>quarkus-cxf-rt-features-logging</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
+
+        <dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-security</artifactId>
+		</dependency>
+        <dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-elytron-security</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-elytron-security-properties-file</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>io.quarkus</groupId>

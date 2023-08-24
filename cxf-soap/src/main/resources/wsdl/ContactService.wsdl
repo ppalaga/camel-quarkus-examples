@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://camel.apache.org/test/ContactService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="ContactService" targetNamespace="http://camel.apache.org/test/ContactService" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+	<wsp:UsingPolicy wsdl:required="true"/>
+	<wsp:Policy wsu:Id="BN_Policy">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<wsp:All xmlns:wsp="http://www.w3.org/ns/ws-policy">
+					<sp:AsymmetricBinding xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+						<wsp:Policy>
+							<sp:InitiatorToken>
+								<wsp:Policy>
+									<sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+										<wsp:Policy>
+											<sp:WssX509V3Token10/>
+										</wsp:Policy>
+									</sp:X509Token>
+								</wsp:Policy>
+							</sp:InitiatorToken>
+							<sp:RecipientToken>
+								<wsp:Policy>
+									<sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
+										<wsp:Policy>
+											<sp:WssX509V3Token10/>
+										</wsp:Policy>
+									</sp:X509Token>
+								</wsp:Policy>
+							</sp:RecipientToken>
+							<sp:AlgorithmSuite>
+								<wsp:Policy>
+									<sp:Basic256/>
+								</wsp:Policy>
+							</sp:AlgorithmSuite>
+							<sp:Layout>
+								<wsp:Policy>
+									<sp:Lax/>
+								</wsp:Policy>
+							</sp:Layout>
+							<sp:IncludeTimestamp/>
+							<sp:OnlySignEntireHeadersAndBody/>
+						</wsp:Policy>
+					</sp:AsymmetricBinding>
+					<sp:Wss10 xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+						<wsp:Policy>
+							<sp:MustSupportRefKeyIdentifier/>
+							<sp:MustSupportRefIssuerSerial/>
+						</wsp:Policy>
+					</sp:Wss10>
+					<sp:SignedParts xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+						<sp:Body/>
+						<sp:Header Name="Trace" Namespace="http://www.sap.com/webas/630/soap/features/runtime/tracing/"/>
+						<sp:Header Name="messageId" Namespace="http://www.sap.com/webas/640/soap/features/messageId/"/>
+						<sp:Header Name="CallerInformation" Namespace="http://www.sap.com/webas/712/soap/features/runtime/metering/"/>
+						<sp:Header Name="Session" Namespace="http://www.sap.com/webas/630/soap/features/session/"/>
+						<sp:Header Name="To" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="From" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="FaultTo" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="ReplyTo" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="MessageID" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="RelatesTo" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="Action" Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+						<sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="ReferenceParameters" Namespace="http://www.w3.org/2005/08/addressing"/>
+						<sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>
+						<sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>
+						<sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>
+						<sp:Header Name="SequenceFault" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm"/>
+						<sp:Header Name="Sequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+						<sp:Header Name="AckRequested" Namespace="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+						<sp:Header Name="SequenceAcknowledgement" Namespace="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+						<sp:Header Name="SequenceFault" Namespace="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+						<sp:Header Name="UsesSequenceSTR" Namespace="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+						<sp:Header Name="UsesSequenceSSL" Namespace="http://docs.oasis-open.org/ws-rx/wsrm/200702"/>
+					</sp:SignedParts>
+					<sp:SignedSupportingTokens xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+						<wsp:Policy>
+							<sp:SamlToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+								<wsp:Policy>
+									<sp:WssSamlV11Token10/>
+								</wsp:Policy>
+							</sp:SamlToken>
+						</wsp:Policy>
+					</sp:SignedSupportingTokens>
+				</wsp:All>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+	<wsdl:types>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://camel.apache.org/test/ContactService" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://camel.apache.org/test/ContactService" version="1.0">
+			<xs:element name="addContact" type="tns:addContact"/>
+			<xs:element name="addContactResponse" type="tns:addContactResponse"/>
+			<xs:element name="getContact" type="tns:getContact"/>
+			<xs:element name="getContactResponse" type="tns:getContactResponse"/>
+			<xs:element name="getContacts" type="tns:getContacts"/>
+			<xs:element name="getContactsResponse" type="tns:getContactsResponse"/>
+			<xs:element name="removeContact" type="tns:removeContact"/>
+			<xs:element name="removeContactResponse" type="tns:removeContactResponse"/>
+			<xs:element name="updateContact" type="tns:updateContact"/>
+			<xs:element name="updateContactResponse" type="tns:updateContactResponse"/>
+			<xs:complexType name="getContact">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="arg0" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="getContactResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="return" type="tns:Contact"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="Contact">
+				<xs:sequence>
+					<xs:element form="qualified" minOccurs="0" name="name" type="xs:string"/>
+					<xs:element form="qualified" minOccurs="0" name="address" type="tns:Address"/>
+					<xs:element form="qualified" minOccurs="0" name="type" type="tns:ContactType"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="Address">
+				<xs:sequence>
+					<xs:element form="qualified" minOccurs="0" name="city" type="xs:string"/>
+					<xs:element form="qualified" minOccurs="0" name="street" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="getContacts">
+				<xs:sequence/>
+			</xs:complexType>
+			<xs:complexType name="getContactsResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="return" type="tns:Contacts"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="Contacts">
+				<xs:sequence>
+					<xs:element form="qualified" maxOccurs="unbounded" minOccurs="0" name="contacts" nillable="true" type="tns:Contact"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="removeContact">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="arg0" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="removeContactResponse">
+				<xs:sequence/>
+			</xs:complexType>
+			<xs:complexType name="addContact">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="arg0" type="tns:Contact"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="addContactResponse">
+				<xs:sequence/>
+			</xs:complexType>
+			<xs:complexType name="updateContact">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="arg0" type="xs:string"/>
+					<xs:element minOccurs="0" name="arg1" type="tns:Contact"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="updateContactResponse">
+				<xs:sequence/>
+			</xs:complexType>
+			<xs:simpleType name="ContactType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="PERSONAL"/>
+					<xs:enumeration value="WORK"/>
+					<xs:enumeration value="OTHER"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:element name="NoSuchContact" nillable="true" type="xs:string"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="removeContact">
+		<wsdl:part element="tns:removeContact" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="addContactResponse">
+		<wsdl:part element="tns:addContactResponse" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getContact">
+		<wsdl:part element="tns:getContact" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getContacts">
+		<wsdl:part element="tns:getContacts" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getContactResponse">
+		<wsdl:part element="tns:getContactResponse" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="removeContactResponse">
+		<wsdl:part element="tns:removeContactResponse" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="NoSuchContactException">
+		<wsdl:part element="tns:NoSuchContact" name="NoSuchContactException">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getContactsResponse">
+		<wsdl:part element="tns:getContactsResponse" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="updateContactResponse">
+		<wsdl:part element="tns:updateContactResponse" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="addContact">
+		<wsdl:part element="tns:addContact" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="updateContact">
+		<wsdl:part element="tns:updateContact" name="parameters">
+    </wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="ContactService">
+		<wsdl:operation name="getContact">
+			<wsdl:input message="tns:getContact" name="getContact">
+    </wsdl:input>
+			<wsdl:output message="tns:getContactResponse" name="getContactResponse">
+    </wsdl:output>
+			<wsdl:fault message="tns:NoSuchContactException" name="NoSuchContactException">
+    </wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getContacts">
+			<wsdl:input message="tns:getContacts" name="getContacts">
+    </wsdl:input>
+			<wsdl:output message="tns:getContactsResponse" name="getContactsResponse">
+    </wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="removeContact">
+			<wsdl:input message="tns:removeContact" name="removeContact">
+    </wsdl:input>
+			<wsdl:output message="tns:removeContactResponse" name="removeContactResponse">
+    </wsdl:output>
+			<wsdl:fault message="tns:NoSuchContactException" name="NoSuchContactException">
+    </wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="addContact">
+			<wsdl:input message="tns:addContact" name="addContact">
+    </wsdl:input>
+			<wsdl:output message="tns:addContactResponse" name="addContactResponse">
+    </wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateContact">
+			<wsdl:input message="tns:updateContact" name="updateContact">
+    </wsdl:input>
+			<wsdl:output message="tns:updateContactResponse" name="updateContactResponse">
+    </wsdl:output>
+			<wsdl:fault message="tns:NoSuchContactException" name="NoSuchContactException">
+    </wsdl:fault>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ContactServiceSoapBinding" type="tns:ContactService">
+		<wsp:Policy>
+			<wsp:PolicyReference URI="#BN_Policy" />
+		</wsp:Policy>
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getContact">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="getContact">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getContactResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="NoSuchContactException">
+				<soap:fault name="NoSuchContactException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getContacts">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="getContacts">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="getContactsResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="removeContact">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="removeContact">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="removeContactResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="NoSuchContactException">
+				<soap:fault name="NoSuchContactException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="addContact">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="addContact">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="addContactResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="updateContact">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="updateContact">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="updateContactResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="NoSuchContactException">
+				<soap:fault name="NoSuchContactException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="ContactService">
+		<wsdl:port binding="tns:ContactServiceSoapBinding" name="ContactServicePort">
+			<soap:address location="http://localhost:8080/cxf/services/contact"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
