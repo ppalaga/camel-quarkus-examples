@@ -55,6 +55,9 @@ public class WsdlClientTest extends BaseTest {
         // CustomerService port = (CustomerService) factory.create();
         CustomerService port = service.getPort(CustomerService.class);
 
+        // to ignore wron hostname in TLS cert
+        initTLS(port);
+
         BindingProvider bp = (BindingProvider) port;
         Map<String, Object> requestContext = bp.getRequestContext();
 

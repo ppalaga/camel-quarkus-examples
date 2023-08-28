@@ -16,9 +16,16 @@
  */
 package org.acme.cxf.soap;
 
-import io.quarkus.runtime.LaunchMode;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
+
+import io.quarkus.runtime.LaunchMode;
 
 public class BaseTest {
     // protected String getServerUrl() {
@@ -34,4 +41,36 @@ public class BaseTest {
                 : config.getValue("quarkus.http.ssl-port", Integer.class);
         return String.format("https://localhost:%d", port);
     }
+
+
+    protected <T> void initTLS(T wsPort) {
+
+		HTTPConduit httpConduit = (HTTPConduit) ClientProxy.getClient(wsPort).getConduit();
+		TLSClientParameters tlsCP = new TLSClientParameters();
+		// other TLS/SSL configuration like setting up TrustManagers
+		// in case of "localhost" the certname does not match the hostname, so ignore it
+		tlsCP.setDisableCNCheck(isLocalhost(httpConduit));
+		tlsCP.setUseHttpsURLConnectionDefaultSslSocketFactory(false);
+
+		httpConduit.setTlsClientParameters(tlsCP);
+	}
+
+	protected boolean isLocalhost(HTTPConduit httpConduit) {
+		boolean result = false;
+		try {
+			String address = httpConduit.getAddress();
+			URL url = new URL(address);
+			String host = url.getHost();
+			if (isLocalhost(host)) {
+				result = true;
+			}
+		} catch (MalformedURLException e) {
+			// egal, dann bleibt's halt "false"
+		}
+		return result;
+	}
+
+	protected boolean isLocalhost(String hostname) {
+		return "localhost".equalsIgnoreCase(hostname) || "127.0.0.1".equals(hostname);
+	}
 }
