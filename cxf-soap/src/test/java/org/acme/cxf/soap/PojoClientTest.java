@@ -17,7 +17,6 @@
 package org.acme.cxf.soap;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -32,11 +31,6 @@ import org.acme.cxf.soap.pojo.service.ContactService;
 import org.acme.cxf.soap.pojo.service.ContactType;
 import org.acme.cxf.soap.pojo.service.NoSuchContactException;
 import org.acme.cxf.soap.security.SamlStandaloneCallbackHandler;
-import org.apache.cxf.ext.logging.LoggingInInterceptor;
-import org.apache.cxf.ext.logging.LoggingOutInterceptor;
-import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.interceptor.Interceptor;
-import org.apache.cxf.message.Message;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

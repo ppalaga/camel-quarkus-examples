@@ -25,9 +25,9 @@
     <name>Camel Quarkus :: Examples :: JMS JPA</name>
     <description>Camel Quarkus Example :: JMS JPA</description>
     <properties>
-        <quarkus.platform.version>3.2.2.Final</quarkus.platform.version>
-        <camel-quarkus.platform.version>3.0.0-SNAPSHOT</camel-quarkus.platform.version>
-        <quarkiverse-artemis.version>3.0.0</quarkiverse-artemis.version>
+        <quarkus.platform.version>3.2.4.Final</quarkus.platform.version>
+        <camel-quarkus.platform.version>3.0.0-RC2</camel-quarkus.platform.version>
+        <quarkiverse-artemis.version>3.0.1</quarkiverse-artemis.version>
 
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
