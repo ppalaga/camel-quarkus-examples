@@ -46,7 +46,7 @@ public class PojoClientTest extends BaseTest {
 
         ContactService port = service.getPort(ContactService.class);
         BindingProvider bp = (BindingProvider) port;
-        
+
         // to ignore wron hostname in TLS cert
         initTLS(port);
 
