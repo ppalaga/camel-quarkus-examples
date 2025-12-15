@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -23,7 +22,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ListAssert;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -37,9 +35,6 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.URIish;
 import org.junit.jupiter.api.Test;
 import org.l2x6.cli.assured.CliAssured;
-import org.l2x6.cli.assured.CommandOutput.Line;
-import org.l2x6.cli.assured.CommandOutput.Stream;
-import org.l2x6.cli.assured.CommandResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,7 +131,7 @@ public class UpdateVersionsTest {
                      */
                     final Path examplesMvnwPath = checkoutDir.resolve("mvnw");
                     {
-                        List<Line> lines = CliAssured.command(
+                        CliAssured.command(
                                 examplesMvnwPath.toString(),
                                 "org.l2x6.cq:cq-prod-maven-plugin:" + cqPluginVersion + ":sync-examples-from-upstream",
                                 "-Dcq.quarkus.platform.version=" + platformVersion,
@@ -144,14 +139,16 @@ public class UpdateVersionsTest {
                                 "-B"
                                 )
                                 .cd(checkoutDir)
-                                .start()
-                                .awaitTermination(Duration.ofMinutes(10))
+                                .then()
+                                    .stdout()
+                                        .hasLinesContaining("BUILD SUCCESS")
+                                        .log()
+                                    .stderr()
+                                        .doesNotHaveLinesMatching(ERROR_PATTERN)
+                                        .log()
+                                .execute(Duration.ofMinutes(10))
                                 .assertSuccess()
-                                .output()
-                                .hasLineContaining("BUILD SUCCESS")
-                                .lines()
                                 ;
-                        noErrors(lines);
                     }
 
                     /* Run tests if there are changes */
@@ -177,26 +174,23 @@ public class UpdateVersionsTest {
 
                         for (Path exampleDir : exampleDirs) {
                             Path logFile = Path.of("target/" + exampleDir.getFileName() + ".log").toAbsolutePath().normalize();
-                            CommandResult result = CliAssured.command(
-                                    checkoutDir.resolve("mvnw").toString(),
-                                    "clean",
-                                    "verify",
-                                    "-ntp",
-                                    "-B"
-                                    )
+                            CliAssured.given()
                                     .cd(exampleDir)
-                                    .start()
-                                    .awaitTermination(Duration.ofMinutes(10));
-                            Files.write(
-                                    logFile,
-                                    result.output().lines().stream()
-                                        .map(Line::toString)
-                                        .collect(Collectors.joining("\n"))
-                                        .getBytes(StandardCharsets.UTF_8));
-
-                            result.assertSuccess()
-                                    .output()
-                                    .hasLineContaining("BUILD SUCCESS");
+                                    .stderrToStdout()
+                                .when()
+                                    .command(
+                                        checkoutDir.resolve("mvnw").toString(),
+                                        "clean",
+                                        "verify",
+                                        "-ntp",
+                                        "-B")
+                                .then()
+                                    .stdout()
+                                        .hasLinesContaining("BUILD SUCCESS")
+                                        .log()
+                                        .redirect(logFile)
+                                .execute(Duration.ofMinutes(10))
+                                .assertSuccess();
                         }
 
                         if (!localTest) {
@@ -228,10 +222,6 @@ public class UpdateVersionsTest {
         } catch (Exception e) {
             reportFailure(e, ghRepository, issueId, workflowRunUrl, ghToken, localTest);
         }
-    }
-
-    private ListAssert<Line> noErrors(List<Line> lines) {
-        return Assertions.assertThat(lines).allMatch(l -> l.stream() == Stream.stderr ? !ERROR_PATTERN.matcher(l.line()).find() : true);
     }
 
     static void reportFailure(Exception e, String ghRepository, String issueId, String workflowRunUrl, String ghToken, boolean localTest) {
