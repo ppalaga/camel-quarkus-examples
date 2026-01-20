@@ -20,7 +20,7 @@ public class UtilsTest {
 
         for (Entry<String, String> en : versions.entrySet()) {
             Assertions.assertThat(en.getKey()).matches("[\\d]+\\.[\\d]+\\.x-product");
-            Assertions.assertThat(en.getValue()).matches("[\\d]+\\.[\\d]+\\.[\\d]+\\.redhat-[0-9]{5}");
+            Assertions.assertThat(en.getValue()).matches(".*[\\.\\-]redhat-[0-9]{5}");
         }
     }
 

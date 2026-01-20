@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.assertj.core.api.Assertions;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -35,6 +34,7 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.URIish;
 import org.junit.jupiter.api.Test;
 import org.l2x6.cli.assured.CliAssured;
+import org.l2x6.mvn.assured.Mvn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,8 +74,6 @@ public class UpdateVersionsTest {
         try {
 
             final String cqPluginVersion = Utils.getLatestCqPluginVersion();
-            final Path mvnwPath = Path.of("mvnw").toAbsolutePath().normalize();
-            Assertions.assertThat(mvnwPath).isRegularFile();
 
             final String remoteAlias = "midstream";
             final CredentialsProvider creds = new GitHubTokenCredentials(ghToken);
@@ -129,15 +127,14 @@ public class UpdateVersionsTest {
                      *   -Pprod \
                      *   -Dcq.quarkus.platform.version=${PLATFORM_VERSION}
                      */
-                    final Path examplesMvnwPath = checkoutDir.resolve("mvnw");
+                    final Mvn mvnv = Mvn.fromMvnw(checkoutDir).installIfNeeded();
                     {
-                        CliAssured.command(
-                                examplesMvnwPath.toString(),
-                                "org.l2x6.cq:cq-prod-maven-plugin:" + cqPluginVersion + ":sync-examples-from-upstream",
-                                "-Dcq.quarkus.platform.version=" + platformVersion,
-                                "-ntp",
-                                "-B"
-                                )
+                        mvnv
+                                .args(
+                                    "org.l2x6.cq:cq-prod-maven-plugin:" + cqPluginVersion + ":sync-examples-from-upstream",
+                                    "-Dcq.quarkus.platform.version=" + platformVersion,
+                                    "-ntp",
+                                    "-B")
                                 .cd(checkoutDir)
                                 .then()
                                     .stdout()
@@ -174,16 +171,14 @@ public class UpdateVersionsTest {
 
                         for (Path exampleDir : exampleDirs) {
                             Path logFile = Path.of("target/" + exampleDir.getFileName() + ".log").toAbsolutePath().normalize();
-                            CliAssured.given()
-                                    .cd(exampleDir)
-                                    .stderrToStdout()
-                                .when()
-                                    .command(
-                                        checkoutDir.resolve("mvnw").toString(),
+                            mvnv
+                                .args(
                                         "clean",
                                         "verify",
                                         "-ntp",
                                         "-B")
+                                .cd(exampleDir)
+                                .stderrToStdout()
                                 .then()
                                     .stdout()
                                         .hasLinesContaining("BUILD SUCCESS")

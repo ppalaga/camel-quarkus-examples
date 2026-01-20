@@ -30,7 +30,7 @@
     <properties>
         <junit.version>6.0.0</junit.version>
         <assertj.version>3.27.6</assertj.version>
-        <cli-assert.version>0.0.1-alpha8</cli-assert.version>
+        <cli-assert.version>0.0.1-alpha15</cli-assert.version>
         <rest-assured.version>5.5.6</rest-assured.version>
         <slf4j.version>2.0.17</slf4j.version>
         <jgit.version>7.3.0.202506031305-r</jgit.version>
@@ -53,6 +53,11 @@
             <dependency>
                 <groupId>org.l2x6.cli-assured</groupId>
                 <artifactId>cli-assured</artifactId>
+                <version>${cli-assert.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.l2x6.cli-assured</groupId>
+                <artifactId>mvn-assured</artifactId>
                 <version>${cli-assert.version}</version>
             </dependency>
             <dependency>
@@ -119,7 +124,7 @@
         </dependency>
         <dependency>
             <groupId>org.l2x6.cli-assured</groupId>
-            <artifactId>cli-assured</artifactId>
+            <artifactId>mvn-assured</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

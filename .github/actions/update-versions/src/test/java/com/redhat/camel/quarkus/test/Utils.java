@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -15,6 +16,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 
 public class Utils {
+    private static final Pattern RED_HAT_VERSION_PATTERN = Pattern.compile(".*[\\.\\-]redhat-[0-9]{5}$");
     public static String getLatestCqPluginVersion() {
         XmlPath body = RestAssured.get("https://repo1.maven.org/maven2/org/l2x6/cq/cq-prod-maven-plugin/maven-metadata.xml")
             .then()
@@ -56,7 +58,7 @@ public class Utils {
                                         UpdateVersionsTest.log.info("Skipping Platform version " + bomVersion + " because it is older than " + minimalCQVersion);
                                         return;
                                     }
-                                    if (bomVersion.contains(".redhat-")) {
+                                    if (RED_HAT_VERSION_PATTERN.matcher(bomVersion).matches()) {
                                         UpdateVersionsTest.log.info("Found Platform BOM " + bomVersion + " in " + ceqBomGav);
                                         result.put(branch, bomVersion);
                                     } else {
